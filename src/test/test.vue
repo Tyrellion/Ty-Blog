@@ -1,140 +1,46 @@
 <template>
-  <n-menu :options="menuOptions" @update:value="handleUpdateValue" />
+  <h1>test</h1>
+  <n-divider />
+  <n-h3 style="text-align: center"> 五美金的礼品卡 </n-h3>
+  <n-tabs type="segment">
+    <n-tab-pane name="chap1" tab="第一章">
+      我这辈子最疯狂的事，发生在我在 Amazon
+      当软件工程师的时候，故事是这样的：<br /><br />
+      那时我和女朋友住在一起，正在家里远程工作。忽然同事给我发来了紧急消息：”我们的服务出现了
+      SEV 2 级别的故障！需要所有的人马上协助！“我们组的应用全挂掉了。<br /><br />
+      当我还在费力的寻找修复方法的时候，忽然闻到隔壁房间的的焦味，防火报警器开始鸣叫。
+    </n-tab-pane>
+    <n-tab-pane name="chap2" tab="第二章">
+      “威尔！着火了！快来帮忙！”我听到女朋友大喊。现在一个难题在我面前——是恢复一个重要的
+      Amazon 服务，还是救公寓的火。<br /><br />
+      我的脑海中忽然出现了 Amazon
+      著名的领导力准则”客户至上“，有很多的客户还依赖我们的服务，我不能让他们失望！所以着火也不管了，女朋友喊我也无所谓，我开始
+      debug 这个线上问题。
+    </n-tab-pane>
+    <n-tab-pane name="chap3" tab="第三章">
+      但是忽然，公寓的烟味消失，火警也停了。我的女朋友走进了房间，让我震惊的是，她摘下了自己的假发，她是
+      Jeff Bezos（Amazon 老板）假扮的！<br /><br />
+      “我对你坚持顾客至上的原则感到十分骄傲”，说完，他递给我一张五美金的亚马逊礼品卡，从我家窗户翻了出去，跳上了一辆
+      Amazon 会员服务的小货车，一溜烟离开了。<br /><br />虽然现在我已不在 Amazon
+      工作，但我还是非常感激在哪里学的到的经验，这些经验我终身难忘。你们同意么？
+    </n-tab-pane>
+  </n-tabs>
+  
+  <n-card title="歌曲" style="margin-bottom: 16px">
+    <n-tabs type="line" animated>
+      <n-tab-pane name="oasis" tab="Oasis">
+        Wonderwall
+      </n-tab-pane>
+      <n-tab-pane name="the beatles" tab="the Beatles">
+        Hey Jude
+      </n-tab-pane>
+      <n-tab-pane name="jay chou" tab="周杰伦">
+        七里香
+      </n-tab-pane>
+    </n-tabs>
+  </n-card>
 </template>
 
-<script>
-import { defineComponent, h } from "vue";
-import { NIcon, useMessage } from "naive-ui";
-import { RouterLink } from "vue-router";
-import {
-  BookOutline as BookIcon,
-  PersonOutline as PersonIcon,
-  WineOutline as WineIcon,
-  HomeOutline as HomeIcon
-} from "@vicons/ionicons5";
+<script setup></script>
 
-function renderIcon(icon) {
-  return () => h(NIcon, null, { default: () => h(icon) });
-}
-
-const menuOptions = [
-  {
-    label: () => h(
-      RouterLink,
-      {
-        to: {
-          name: "home",
-          params: {
-            lang: "zh-CN"
-          }
-        }
-      },
-      { default: () => "回家" }
-    ),
-    key: "go-back-home",
-    icon: renderIcon(HomeIcon)
-  },
-  {
-    key: "divider-1",
-    type: "divider",
-    props: {
-      style: {
-        marginLeft: "32px"
-      }
-    }
-  },
-  {
-    label: () => h(
-      "a",
-      {
-        href: "https://baike.baidu.com/item/%E4%B8%94%E5%90%AC%E9%A3%8E%E5%90%9F",
-        target: "_blank",
-        rel: "noopenner noreferrer"
-      },
-      "且听风吟"
-    ),
-    key: "hear-the-wind-sing",
-    icon: renderIcon(BookIcon)
-  },
-  {
-    label: "1973年的弹珠玩具",
-    key: "pinball-1973",
-    icon: renderIcon(BookIcon),
-    disabled: true,
-    children: [
-      {
-        label: "鼠",
-        key: "rat"
-      }
-    ]
-  },
-  {
-    label: "寻羊冒险记",
-    key: "a-wild-sheep-chase",
-    icon: renderIcon(BookIcon),
-    disabled: true
-  },
-  {
-    label: "舞，舞，舞",
-    key: "dance-dance-dance",
-    icon: renderIcon(BookIcon),
-    children: [
-      {
-        type: "group",
-        label: "人物",
-        key: "people",
-        children: [
-          {
-            label: "叙事者",
-            key: "narrator",
-            icon: renderIcon(PersonIcon)
-          },
-          {
-            label: "羊男",
-            key: "sheep-man",
-            icon: renderIcon(PersonIcon)
-          }
-        ]
-      },
-      {
-        label: "饮品",
-        key: "beverage",
-        icon: renderIcon(WineIcon),
-        children: [
-          {
-            label: "威士忌",
-            key: "whisky"
-          }
-        ]
-      },
-      {
-        label: "食物",
-        key: "food",
-        children: [
-          {
-            label: "三明治",
-            key: "sandwich"
-          }
-        ]
-      },
-      {
-        label: "过去增多，未来减少",
-        key: "the-past-increases-the-future-recedes"
-      }
-    ]
-  }
-];
-
-export default defineComponent({
-  setup() {
-    const message = useMessage();
-    return {
-      menuOptions,
-      handleUpdateValue(key, item) {
-        message.info("[onUpdate:value]: " + JSON.stringify(key));
-        message.info("[onUpdate:value]: " + JSON.stringify(item));
-      }
-    };
-  }
-});
-</script>
+<style></style>

@@ -1,11 +1,11 @@
 <template>
-  <h1>APP</h1>
   <router-view></router-view>
 
+ 
 </template>
 
-<script>
-
+<script setup>
+import test from './test/test.vue'
 </script>
 <style scoped>
 

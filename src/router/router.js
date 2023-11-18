@@ -5,7 +5,8 @@ import { createRouter, createWebHistory } from 'vue-router';
         path: '/test',
         name: 'test',
         component: () => import('../test/test.vue')
-      }
+      },
+      { path: "/menu", component: () => import("../test/menu.vue") },
     ]
 
   const router = createRouter({
