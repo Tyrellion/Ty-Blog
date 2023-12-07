@@ -1,25 +1,10 @@
 <template>
   <div class="boss">
     <div class="nav">
-      <div class="sidnav">
-        <n-avatar
-          :style="{
-            color: 'yellow',
-            backgroundColor: 'red',
-            width: '200px',
-            height: '60px',
-            margintop: 'auto',
-          }"
-        >
-          M
-        </n-avatar>
-        <n-input
-          class="search"
-          v-model:value="value"
-          type="text"
-          placeholder="基本的 Input"
-        />
-      </div>
+        <div class="menu"></div>
+        <div class="search"></div>
+
+     
     </div>
     <div class="content">
       <n-divider>Self 响应式</n-divider>
@@ -59,19 +44,18 @@ import page1 from "./menu/page1.vue";
 
 <style lang="less">
 .nav {
-  width: 100%;
   height: 70px;
   background-color: #fff;
+  display: flex;
 }
-.sidnav {
-  background-color: yellowgreen;
-  margin: 0 120px 0 120px;
-  width: calc(100% - 240px);
+.menu{
+  background-color: lightgreen;
+  flex: 1;
 }
 .search {
-  margin: 0 auto;
-  width: 200px !important ;
-  height: 35px;
+ background-color: blue;
+ height: 70px;
+ width: 200px;
 }
 .light-green {
   display: flex;
