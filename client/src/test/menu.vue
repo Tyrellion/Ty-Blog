@@ -1,5 +1,5 @@
 <template>
-  <div class="boss">
+  <div class="nav_fixed">
     <div class="nav">
       <div class="menu">
         <n-grid :x-gap="6" cols="6" item-responsive>
@@ -20,50 +20,29 @@
         />
       </div>
     </div>
+  </div>
+  <div class="boss">
     <div class="content">
-      <n-divider>Self 响应式</n-divider>
       <n-grid :x-gap="12" cols="8" item-responsive>
-        <n-grid-item span=" 8 1280:6">
-          <div class="light-green">
+        <n-grid-item class="l_content" span=" 8 1280:6">
+          <!-- <div class="light-green">
             0～400px：不显示<br />
             400～600px：占据空间 1<br />
             600～800px：占据空间 2<br />
             800px 以上：占据空间 3
-          </div>
+          </div> -->
+          <n-card title="超大卡片" size="huge"> 卡片内容 </n-card>
+          <n-card title="超大卡片" size="huge" hoverable> 卡片内容 </n-card>
+          <n-card title="超大卡片" size="huge" hoverable> 卡片内容 </n-card>
         </n-grid-item>
-        <n-grid-item span="0 1280:2">
-          <div class="green">2</div>
-        </n-grid-item>
-      </n-grid>
-      <n-divider>Screen 响应式</n-divider>
-      <n-grid cols="4" item-responsive responsive="screen">
-        <n-grid-item span=" 100:1 800:2">
-          <div class="light-green">
-            m 以下：不显示<br />
-            m 到 l：占据空间 1<br />
-            l 以上：占据空间 2
-          </div>
-        </n-grid-item>
-        <n-grid-item span="100:1 600:2">
+        <n-grid-item class="r_content" span="0 1280:2">
           <div class="green">2</div>
         </n-grid-item>
       </n-grid>
     </div>
+  <n-pagination v-model:page="page" :page-count="100" />
+
   </div>
-  <n-divider>Self 响应式</n-divider>
-  <n-grid cols="4" item-responsive>
-    <n-grid-item span="0 800:1 1000:2 1200:3">
-      <div class="light-green">
-        0～400px：不显示<br />
-        400～600px：占据空间 1<br />
-        600～800px：占据空间 2<br />
-        800px 以上：占据空间 3
-      </div>
-    </n-grid-item>
-    <n-grid-item>
-      <div class="green">2</div>
-    </n-grid-item>
-  </n-grid>
 </template>
 
 <script setup>
@@ -71,6 +50,10 @@ import page1 from "./menu/page1.vue";
 </script>
 
 <style lang="less">
+.zhanwei {
+  height: 150vh; //<p class="zhanwei">123</p>
+}
+
 .nav {
   height: 70px;
   background-color: #ffffff;
@@ -92,10 +75,10 @@ import page1 from "./menu/page1.vue";
   }
 }
 .search {
-  background-color: blue;
+  background-color: rgb(119, 119, 151);
   height: 70px;
   width: 200px;
-  display: flex;//使得search-box搜索框居中
+  display: flex; //使得search-box搜索框居中
   justify-content: center;
   align-items: center;
 }
@@ -104,15 +87,22 @@ import page1 from "./menu/page1.vue";
   align-items: center;
   justify-content: center; */
   height: 200px;
-  //background-color: rgba(0, 128, 0, 0.12);
-  background-image: url(../../img/左.png);
+  background-color: lightgreen;
+  //background-image: url(../../img/左.png);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.n-card {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  height: 170px;
 }
 .green {
   /*  display: flex;
   align-items: center;
   justify-content: center; */
   height: 200px;
-  //background-color: rgba(0, 128, 0, 0.24);
+  background-color: darkgreen;
   background-image: url(../../img/右.png);
 }
 
