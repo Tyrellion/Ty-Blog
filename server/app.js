@@ -17,7 +17,7 @@ app.use(function (req, res, next) {
     else next();
 });
 app.use(express.json())//?引入JSON用于前后端交互(注意位置之前出过错)
-//当客户端发送带有 JSON 格式数据的 POST 请求时，该中间件会将请求体中的 JSON 数据解析成 JavaScript 对象，并将其作为 req.body 对象的属性，以供后续的路由处理程序使用。
+//当客户端发送带有 JSON 格式数据的 POST 请求时，该中间件会将请求体中的 JSON 数据解析成 JavaScript 对象，并将其作为 req.body 对象的属性，以供后续的路由处理程序使用 。
 const update = multer({
     dest: "./public/upload/temp"
 })//上传目录
