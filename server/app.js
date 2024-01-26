@@ -1,7 +1,8 @@
 const express =require("express")
 const app = express();
+const path = require("path")
 const multer = require("multer")//用于文件上传
-
+const { db, genid } = require("./db/DbUtils")//es6的解构赋值
 const port = 8080
 
 //开放跨域请求
@@ -21,6 +22,31 @@ const update = multer({
     dest: "./public/upload/temp"
 })//上传目录
 app.use(update.any())//接收任何文件格式上传
+//静态资源路径
+app.use(express.static(path.join(__dirname, "public")))//app.use(express.static(path.join(__dirname, "public")))这段代码是使用Express框架中的中间件函数express.static来将public目录下的静态文件（如图片、CSS、JavaScript文件等）托管到Web服务器上，以便客户端可以直接访问这些文件。可直接在浏览器访问http://localhost:8080/upload/515412032245829.png
+
+//*token验证
+const ADMIN_TOKEN_PATH = "/_token"
+app.all("*", async (req, res, next) => {//通常用于定义全局中间件或处理程序
+    if (req.path.indexOf(ADMIN_TOKEN_PATH) > -1) {//用于检查当前请求路径是否包含/_token
+
+        let { token } = req.headers;//用于从 HTTP 请求的头部中获取一个名为 token 的变量。//*前端传的
+
+        let admin_token_sql = "SELECT * FROM `admin` WHERE `token` = ?"
+        let adminResult = await db.async.all(admin_token_sql,[token])
+        if(adminResult.err != null || adminResult.rows.length == 0){
+            res.send({
+                code: 403,
+                msg: "请先登录"
+            })
+            return 
+        }else{
+            next()
+        }
+    }else{
+        next()
+    }
+})
 
 app.use("/test",require("./routers/TestRouter"))//"/test"，表示所有以 "/test" 开头的请求都会进入这个中间件处理程序，/test/test//* TestRouter被视为一个程序
 app.use("/admin",require("./routers/AdminRouter"))
