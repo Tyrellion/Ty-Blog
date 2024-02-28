@@ -1,4 +1,30 @@
 <template>
+  <div @click="test">this is test page</div>
+</template>
+
+<script setup>
+import { inject } from "vue";
+
+const axios = inject("axios");
+const test = () => {
+  axios({
+    method: "POST",
+    url: "http://localhost:8080/category/_token/add",
+    headers: {
+      token: "eabb0523-7b68-42af-8ab5-3671ed45eb50",
+    },
+    data: {
+      name:"2-28测试test1"
+    },
+  }).then((res) => {
+    console.log(res.data);
+  });
+  alert("worked");
+};
+</script>
+
+<style></style>
+<!-- <template>
   <div class="nav_fixed">
     <div class="nav">
       <div class="menu">
@@ -118,3 +144,4 @@ max-width: 100% //消除1280px一下出现的宽度滑动条
 }
 }
 </style>
+ -->

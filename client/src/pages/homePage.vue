@@ -46,8 +46,24 @@
 </template>
 
 <script setup>
-import page1 from "./menu/page1.vue";
+import { inject } from "vue";
 
+const axios = inject("axios");
+const test = () => {
+  axios({
+    method: "POST",
+    url: "http://localhost:8080/category/_token/add",
+    headers: {
+      token: "eabb0523-7b68-42af-8ab5-3671ed45eb50",
+    },
+    data: {
+      name:"2-28测试test1"
+    },
+  }).then((res) => {
+    console.log(res.data);
+  });
+  alert("worked");
+};
 </script>
 
 <style lang="less">

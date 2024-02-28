@@ -31,13 +31,12 @@ app.all("*", async (req, res, next) => {//通常用于定义全局中间件或�
     if (req.path.indexOf(ADMIN_TOKEN_PATH) > -1) {//用于检查当前请求路径是否包含/_token
 
         let { token } = req.headers;//用于从 HTTP 请求的头部中获取一个名为 token 的变量。//*前端传的
-
         let admin_token_sql = "SELECT * FROM `admin` WHERE `token` = ?"
         let adminResult = await db.async.all(admin_token_sql,[token])
         if(adminResult.err != null || adminResult.rows.length == 0){
             res.send({
                 code: 403,
-                msg: "请先登录"
+                msg: "请先登录",
             })
             return 
         }else{
