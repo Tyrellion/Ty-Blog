@@ -24,22 +24,38 @@
           </n-input>
         </n-form-item>
       </n-form>
-
+      <n-checkbox v-model:checked="check">
+      记住密码
+    </n-checkbox>
       <n-button @click="login"
         >登录<n-icon> <Login /> </n-icon
       ></n-button>
+      
     </n-card>
   </div>
 </template>
 
 <script setup>
 import { Login, UserAvatar, Password } from "@vicons/carbon";
-import { ref, reactive } from "vue"; //用于创建响应式对象user
+import { ref, reactive, inject } from "vue"; //用于创建响应式对象user
+import{UserStore}from'../store/userStore'
 
+import { useRouter, useRoute } from 'vue-router'//使用路由
+const router = useRouter()
+const route = useRoute()
+
+const message = inject("message");
+
+const axios = inject("axios")
+//接收输入框的值
+const userStore = UserStore()//调用userStore
 const user = reactive({
-  account: "",
-  password: "",
+  account: localStorage.getItem("account") || "",//先看是否记住在本地 
+    password: localStorage.getItem("password") || "",
+    check: localStorage.getItem("check") == 1 || false,
 }); //对应input框的值，而item里的path对应rules
+const check = ref(localStorage.getItem("check") == 1 || false);
+
 
 const rules = {
   account: [
@@ -61,8 +77,27 @@ const rules = {
     },
   ],
 };
-const login=async()=>{
-    let result = await axios.post
+const login = async () =>{
+    let result = await axios.post("/admin/login",{
+      account:user.account,
+      password:user.password
+    })
+    if(result.data.code ==200){
+      userStore.id=result.data.data.id
+      userStore.token = result.data.data.token
+      userStore.account=result.data.data.account
+      if(check.value){
+      localStorage.setItem("account",user.account)
+      localStorage.setItem("password",user.password)
+      localStorage.setItem("check", check.value ? 1 : 0)//用于确定选中框是否打钩
+    }
+    router.push("/dashboard")
+      message.success("登录成功")
+    }//将登录成功后的数据存储到userStore中
+    
+    else{
+      message.error("请检查账号密码是否正确")
+    }
 }
 </script>
 
@@ -76,3 +111,13 @@ const login=async()=>{
   text-align: center;
 }
 </style>
+
+
+
+
+
+
+
+
+
+
