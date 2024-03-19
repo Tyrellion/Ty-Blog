@@ -11,6 +11,10 @@ let routes = [
   {
     path: "/dashboard",
     component: () => import("../pages/dashboard/Dashboard.vue"),
+    children: [
+      { path: "/dashboard/category", component: () => import("../pages/dashboard/Category.vue") },
+        { path: "/dashboard/article", component: () => import("../pages/dashboard/Article.vue") },
+    ],
   },
   { path: "/", component: () => import("../pages/homePage.vue") },
 ];
