@@ -1,138 +1,153 @@
 <template>
-  <div class="nav_fixed">
+  <div class="container">
     <div class="nav">
-      <div class="menu">
-        <n-grid :x-gap="6" cols="6" item-responsive>
-          <n-grid-item span="1"> <p class="tesdt">13</p></n-grid-item>
-          <n-grid-item span="1"> <p>三四</p></n-grid-item>
-          <n-grid-item span="1"> <p>五六我</p></n-grid-item>
-          <n-grid-item span="1"> <p>三四</p></n-grid-item>
-          <n-grid-item span="1"> <p>仨打是</p></n-grid-item>
-          <n-grid-item span="1"> <p>三四</p></n-grid-item>
-        </n-grid>
+      <div @click="homePage">首页</div>
+      <div>
+        <n-popselect @update:value="searchCategory" v-model:value="selectedCategory" :options="categortyOptions" trigger="click">
+          <div>分类<span>{{ categoryName }}</span> </div>
+        </n-popselect>
       </div>
-      <div class="search">
-        <n-input
-          class="search-box"
-          v-model:value="value"
-          type="text"
-          placeholder="请输入搜索内容"
-        />
-      </div>
+      <div @click="dashboard">后台</div>
     </div>
-  </div>
-  <div class="boss">
-    <div class="content">
-      <n-grid :x-gap="12" cols="8" item-responsive>
-        <n-grid-item class="l_content" span=" 8 1280:6">
-          <!-- <div class="light-green">
-            0～400px：不显示<br />
-            400～600px：占据空间 1<br />
-            600～800px：占据空间 2<br />
-            800px 以上：占据空间 3
-          </div> -->
-          <n-card title="超大卡片" size="huge"> 卡片内容 </n-card>
-          <n-card title="超大卡片" size="huge" hoverable> 卡片内容 </n-card>
-          <n-card title="超大卡片" size="huge" hoverable> 卡片内容 </n-card>
-        </n-grid-item>
-        <n-grid-item class="r_content" span="0 1280:2">
-          <div class="green">2</div>
-        </n-grid-item>
-      </n-grid>
-    </div>
-  <n-pagination v-model:page="page" :page-count="100" />
+    <n-divider/>
 
+    <n-space class="search">
+            <n-input v-model:value="pageInfo.keyword" :style="{ width: '500px' }" placeholder="请输入关键字" />
+            <n-button type="primary" ghost @click="loadBlogs(0)"> 搜索 </n-button>
+        </n-space>
+
+    <div v-for="(blog,index) in blogListInfo" style="margin-bottom: 15px;cursor: pointer;">
+        <n-card :title="blog.title" @click="toDetail(blog)">
+        {{ blog.content }}
+
+        <template #footer>
+            <n-space align="center">
+                <div>发布时间：{{blog.create_time  }}
+                
+                </div>
+  
+            </n-space>
+        </template>
+    </n-card>  
+    </div>  
+
+    <n-pagination @update:page="loadBlogs"	 v-model:page="pageInfo.page" :page-count="pageInfo.pageCount" />
+
+    <n-divider/>
+    <div class="footer">
+            <div>Power by XXXX</div>
+            <div>XICP备XXXXX号-1</div>
+        </div>
   </div>
+  
 </template>
 
 <script setup>
-import { inject } from "vue";
+import { ref, reactive, inject, onMounted,computed } from "vue"; //用于创建响应式对象user
+import { useRouter, useRoute } from "vue-router"; //使用路由
+const router = useRouter();
+const route = useRoute();
 
+const message = inject("message");
+const dialog = inject("dialog");
 const axios = inject("axios");
-const test = () => {
-  axios({
-    method: "POST",
-    url: "http://localhost:8080/category/_token/add",
-    headers: {
-      token: "eabb0523-7b68-42af-8ab5-3671ed45eb50",
-    },
-    data: {
-      name:"2-28测试test1"
-    },
-  }).then((res) => {
-    console.log(res.data);
-  });
-  alert("worked");
-};
+
+const selectedCategory=ref(0)
+const categortyOptions = ref([])
+const blogListInfo=ref([])
+
+const pageInfo=reactive({
+  page:1,
+  pageSize:3,
+  pageCount:0,
+  count:0,
+  keyword:"",
+  categoryId:0
+})//search接口传参
+
+onMounted(()=>{
+    loadCategorys()
+    loadBlogs()
+})
+const loadBlogs=async(page = 0)=>{//如果没有传参page为0
+    if(page!=0){
+        pageInfo.page=page
+    }
+    let res = await axios.get(`/blog/search?keyword=${pageInfo.keyword}&page=${pageInfo.page}&pageSize=${pageInfo.pageSize}&categoryId=${pageInfo.categoryId}`)
+    let temp_rows=res.data.data.rows;
+    for(let row of temp_rows){
+        row.content+="..."
+        let d=new Date(row.create_time)
+        row.create_time=`${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()} `
+    }
+    blogListInfo.value=temp_rows;
+    pageInfo.count=res.data.data.count
+    pageInfo.pageCount = parseInt(pageInfo.count / pageInfo.pageSize) + (pageInfo.count % pageInfo.pageSize > 0 ? 1 : 0)//计算总页数
+    console.log(res);
+}
+const categoryName = computed(()=>{
+    let selectedOption=categortyOptions.value.find((option)=>option.value == selectedCategory.value)
+    return selectedOption?selectedOption.label:""
+})
+
+const loadCategorys = async () => {
+    let res = await axios.get("/category/list")
+    categortyOptions.value = res.data.rows.map((item) => {
+        return {//使用 map 方法，您遍历了这个数组，并为每个分类数据项创建了一个新的对象，该对象包含了 label 和 value 两个属性。
+            label: item.name,//label与value为ui组件库选择框配置格式要求
+            value: item.id
+        }
+    })
+    console.log(categortyOptions.value)
+}
+
+
+const searchCategory=(categoryId)=>{
+  pageInfo.categoryId=categoryId
+  loadBlogs()
+}
+
+const homePage = () => {
+    router.push("/")
+}
+const dashboard=()=>{
+    router.push("/login")
+}
+const toDetail=(blog)=>{
+    router.push({path:"/detail",query:{id:blog.id}})
+    router.push(`/detail?id=${blog.id}`);
+    
+}
 </script>
 
-<style lang="less">
-.zhanwei {
-  height: 150vh; //<p class="zhanwei">123</p>
+<style lang="scss" scoped>
+.search {
+  margin-bottom: 15px;
 }
-
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
 .nav {
-  height: 70px;
-  background-color: #ffffff;
   display: flex;
-}
-.menu {
-  background-color: lightgreen;
-  flex: 1;
+  font-size: 20px;
+  padding-top: 20px;
+  color: #64676a;
   div {
-    p {
-      background-color: #f2c699;
-      height: 70px;
-      text-align: center;
-      line-height: 70px;
-      font-weight: 600;
-      font-size: 1.125rem;
-      overflow: hidden; //暂时设置为这个后面试试直接消除文字？
+    cursor: pointer;
+    margin-right: 15px;
+
+    &:hover {
+      color: #f60;
+    }
+    span{
+        font-size: 12px;
     }
   }
 }
-.search {
-  background-color: rgb(119, 119, 151);
-  height: 70px;
-  width: 200px;
-  display: flex; //使得search-box搜索框居中
-  justify-content: center;
-  align-items: center;
-}
-.light-green {
-  /* display: flex;
-  align-items: center;
-  justify-content: center; */
-  height: 200px;
-  background-color: lightgreen;
-  //background-image: url(../../img/左.png);
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-.n-card {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  height: 170px;
-}
-.green {
-  /*  display: flex;
-  align-items: center;
-  justify-content: center; */
-  height: 200px;
-  background-color: darkgreen;
-  background-image: url(../../img/右.png);
-}
-
-.boss {
-  background-color: pink;
-  width: 100vw;
-  max-width: 100% //消除1280px一下出现的宽度滑动条
-;
-}
-@media (min-width: 1280px) {
-  .boss {
-    width: 1280px;
-    margin: 0 auto;
-  }
+.footer {
+    text-align: center;
+    line-height: 25px;
+    color: #64676a;
 }
 </style>
