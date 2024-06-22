@@ -16,6 +16,11 @@
         </template>
     </n-card>  
     </div>  
+    <n-space>
+    <div @click="toPage(pageNum)" v-for="pageNum in pageInfo.pageCount">
+      <div :style="{ color: pageNum == pageInfo.page ? '#18A058' : '', cursor: 'pointer', fontSize: '16px' }">{{ pageNum }}</div>
+    </div>
+  </n-space>
     </n-tab-pane>
     <n-tab-pane name="add" tab="添加文章">
       <n-form>
@@ -33,7 +38,7 @@
         </n-form-item>
       </n-form>
     </n-tab-pane>
-    <n-tab-pane name="update" tab="修改"> 
+    <n-tab-pane name="update" tab="修改" v-if="isUpdating"> 
       <n-form>
         <n-form-item label="标题">
           <n-input v-model:value="updateArticle.title" placeholder="请输入标题" />
@@ -50,11 +55,7 @@
       </n-form>  
     </n-tab-pane>
   </n-tabs>
-  <n-space>
-    <div @click="toPage(pageNum)" v-for="pageNum in pageInfo.pageCount">
-      <div :style="'color'+(pageNum == pageInfo.page ? 'blue':'')">{{ pageNum }}</div>
-    </div>
-  </n-space>
+  
 </template>
 
 <script setup>
@@ -95,6 +96,8 @@ const pageInfo=reactive({
 const CategoryOptions=ref([])//用于分类的下拉框
 const blogListInfo=ref([])
 const tabValue=ref("list")
+const isUpdating=ref(false)//用于判断是否是显示修改tab
+
 
 onMounted(()=>{
     loadBlogs()
@@ -146,6 +149,7 @@ const toPage= async (pageNum)=>{
   loadBlogs()
 }//跳转到page
 const toUpdate=async(blog)=>{
+  isUpdating.value=true
   tabValue.value="update"
   let res=await axios.get(`/blog/detail?id=${blog.id}`)
   updateArticle.id=blog.id
@@ -184,6 +188,7 @@ const toDelete=async(blog)=>{
   })
   
 }
+
 </script>
 
 <style lang="scss" scoped></style>

@@ -35,8 +35,8 @@
 
     <n-divider/>
     <div class="footer">
-            <div>Power by XXXX</div>
-            <div>XICP备XXXXX号-1</div>
+            <div>Power by Vue3</div>
+            <div>川ICP备66666号-1</div>
         </div>
   </div>
   

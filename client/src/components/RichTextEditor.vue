@@ -81,7 +81,7 @@ onBeforeUnmount(() => {
       if (initFinished) {
         emit("update:model-value", valueHtml.value)//initFinished为true时，才能触发update:modelValue事件
     }//
-    };//编辑器内容改变时触发update:modelValue(这是一个自定义事件的全称)
+    };//编辑器内容改变时触发update:modelValue(这是一个事件的全称)
 </script>
 
 <style lang="scss" scoped>
