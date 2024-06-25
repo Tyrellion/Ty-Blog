@@ -8,9 +8,7 @@
 
 * Naive ui.组件库
 
-## 项目截图
 
-![image-20240624112549568](C:\Users\Messizyw\AppData\Roaming\Typora\typora-user-images\image-20240624112549568.png)
 
 ## 运行
 
